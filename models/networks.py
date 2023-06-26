@@ -637,6 +637,11 @@ class UnetSkipConnectionBlockWithSpectralNorm(nn.Module):
         if self.outermost:
             return self.model(x)
         else:   # add skip connections
+            res = self.model(x)
+            if res.shape[-1] > x.shape[-1]:
+                res = nn.functional.interpolate(x.shape[-1], size=new_size, mode='bilinear')
+            if x.shape[-1] > res.shape[-1]:
+                x = nn.functional.interpolate(res.shape[-1], size=new_size, mode='bilinear')
             return torch.cat([x, self.model(x)], 1)
 
 class NLayerDiscriminator(nn.Module):
