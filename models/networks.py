@@ -638,11 +638,11 @@ class UnetSkipConnectionBlockWithSpectralNorm(nn.Module):
             return self.model(x)
         else:   # add skip connections
             res = self.model(x)
-            if res.shape[-1] > x.shape[-1]:
-                res = nn.functional.interpolate(res, size=x.shape[-1], mode='bilinear')
-            if x.shape[-1] > res.shape[-1]:
-                x = nn.functional.interpolate(x, size=res.shape[-1], mode='bilinear')
-            return torch.cat([x, self.model(x)], 1)
+            #if res.shape[-1] > x.shape[-1]:
+            #    res = nn.functional.interpolate(res, size=x.shape[-1], mode='bilinear')
+            #if x.shape[-1] > res.shape[-1]:
+            #    x = nn.functional.interpolate(x, size=res.shape[-1], mode='bilinear')
+            return torch.cat([x, res], 1)
 
 class NLayerDiscriminator(nn.Module):
     """Defines a PatchGAN discriminator"""
