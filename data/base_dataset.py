@@ -61,7 +61,7 @@ class BaseDataset(data.Dataset, ABC):
         pass
 
 
-def get_params(opt, size):
+def get_params(opt, size, img):
     w, h = size
     new_h = h
     new_w = w
@@ -75,7 +75,7 @@ def get_params(opt, size):
     y = random.randint(0, np.maximum(0, new_h - opt.crop_size))
 
     rr_crop = transforms.RandomResizedCrop(opt.crop_size)
-    (i, j, h, w) = rr_crop.get_params()
+    (i, j, h, w) = rr_crop.get_params(img, rr_crop.scale, rr_crop.ratio)
 
     flip = random.random() > 0.5
 
