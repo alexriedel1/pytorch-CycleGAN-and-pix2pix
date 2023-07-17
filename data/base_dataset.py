@@ -61,10 +61,11 @@ class BaseDataset(data.Dataset, ABC):
         pass
 
 
-def get_params(opt, size, img):
+def get_params(opt, size):
     w, h = size
     new_h = h
     new_w = w
+    
     if opt.preprocess == 'resize_and_crop':
         new_h = new_w = opt.load_size
     elif opt.preprocess == 'scale_width_and_crop':
@@ -76,12 +77,13 @@ def get_params(opt, size, img):
 
     rr_crop = transforms.RandomResizedCrop(opt.crop_size)
     (i, j, h, w) = rr_crop.get_params(img, rr_crop.scale, rr_crop.ratio)
+    size = rr_crop.size
 
     flip = random.random() > 0.5
 
 
 
-    return {'crop_pos': (x, y), 'flip': flip, "rr_crop": (i, j, h, w)}
+    return {'crop_pos': (x, y), 'flip': flip, "rr_crop": (i, j, h, w, size)}
 
 
 def get_transform(opt, params=None, grayscale=False, method=transforms.InterpolationMode.BICUBIC, convert=True):
@@ -97,10 +99,10 @@ def get_transform(opt, params=None, grayscale=False, method=transforms.Interpola
 
     if 'crop' in opt.preprocess:
         if params is None:
-            transform_list.append(transforms.Lambda(lambda img: __rrcrop(img, params['rr_crop'], opt.crop_size)))
+            transform_list.append(transforms.Lambda(lambda img: __rrcrop(img, params['rr_crop'])))
             #transform_list.append(transforms.RandomCrop(opt.crop_size))
         else:
-            transform_list.append(transforms.Lambda(lambda img: __rrcrop(img, params['rr_crop'], opt.crop_size)))
+            transform_list.append(transforms.Lambda(lambda img: __rrcrop(img, params['rr_crop'])))
             #transform_list.append(transforms.Lambda(lambda img: __crop(img, params['crop_pos'], opt.crop_size)))
 
     if opt.preprocess == 'none':
@@ -120,9 +122,8 @@ def get_transform(opt, params=None, grayscale=False, method=transforms.Interpola
             transform_list += [transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
     return transforms.Compose(transform_list)
 
-def __rrcrop(img, params, size):
-    i, j, h, w = params
-    size = size
+def __rrcrop(img, params):
+    i, j, h, w, size = params
     return F.resized_crop(img, i, j, h, w, size, transforms.InterpolationMode.BICUBIC)
 
 def __transforms2pil_resize(method):
