@@ -2,6 +2,7 @@ import os
 from data.base_dataset import BaseDataset, get_params, get_transform
 from data.image_folder import make_dataset
 from PIL import Image
+import random
 
 
 class AlignedDataset(BaseDataset):
@@ -44,6 +45,10 @@ class AlignedDataset(BaseDataset):
         w2 = int(w / 2)
         A = AB.crop((0, 0, w2, h))
         B = AB.crop((w2, 0, w, h))
+
+ 
+        if random.random() > 0.7:
+            A = A.resize((256, 256))
 
         # apply the same transform to both A and B
         transform_params = get_params(self.opt, A.size)
