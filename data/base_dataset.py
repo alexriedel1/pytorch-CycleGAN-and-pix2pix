@@ -61,7 +61,7 @@ class BaseDataset(data.Dataset, ABC):
         pass
 
 
-def get_params(opt, size):
+def get_params(opt, size, img):
     w, h = size
     new_h = h
     new_w = w

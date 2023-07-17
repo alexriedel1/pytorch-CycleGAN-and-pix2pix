@@ -47,9 +47,9 @@ class AlignedDataset(BaseDataset):
         B = AB.crop((w2, 0, w, h))
 
  
-        if random.random() > 0.7:
-            A = A.resize((256, 256))
-            #B = A.resize((256, 256))
+        #if random.random() > 0.7:
+        #    A = A.resize((256, 256))
+        #    #B = A.resize((256, 256))
 
         # apply the same transform to both A and B
         transform_params = get_params(self.opt, A.size, A)
