@@ -49,7 +49,7 @@ class AlignedDataset(BaseDataset):
  
         if random.random() > 0.7:
             A = A.resize((256, 256))
-            B = A.resize((256, 256))
+            #B = A.resize((256, 256))
 
         # apply the same transform to both A and B
         transform_params = get_params(self.opt, A.size, A)
