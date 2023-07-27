@@ -39,7 +39,13 @@ class AlignedDataset(BaseDataset):
         """
         # read a image given a random integer index
         AB_path = self.AB_paths[index]
-        AB = Image.open(AB_path).convert('RGB')
+
+        try:
+          AB = Image.open(AB_path).convert('RGB')
+        except:
+          print(f"Could not open {AB_path}")
+          self.__getitem__(random.randint(0, self.__len__()))
+
         # split AB image into A and B
         w, h = AB.size
         w2 = int(w / 2)
